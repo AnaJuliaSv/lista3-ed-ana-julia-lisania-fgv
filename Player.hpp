@@ -1,3 +1,8 @@
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
+
+#include <iostream>
+
 class Player {
 
 private:
@@ -17,3 +22,5 @@ public:
     int getScore();
     int getTimestamp();
 };
+
+#endif
