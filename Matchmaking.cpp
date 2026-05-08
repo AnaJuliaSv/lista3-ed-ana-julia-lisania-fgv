@@ -23,3 +23,98 @@ bool Matchmaking::insert(Player player){
     
     return false;
 }
+
+// bool RemovePlayer(int id)
+   // implementação
+
+
+// void sortByScoreInsertion()
+   // implementação
+
+
+// funções auxiliares para merge
+
+void Matchmaking::merge(int left, int mid, int right, Player* aux){
+    // recebe duas metades já ordenadas
+    // devemos ir comparando do início de cada array
+
+    int i = left; // índice para percorrer a metade esquerda
+    int j = mid + 1; // índice para percorrer a metade direita
+
+    // a cada passo comparo players[i] com players[j] e copia o menor para o auxiliar 
+    // aí avança o cursor de quem foi copiado
+
+    int k = left; // índice do array auxiliar de players
+    
+    while((i <= mid) && (j <= right)){
+
+        // scores diferentes
+        if(players[i].getScore() < players[j].getScore()){
+            aux[k] = players[i];
+            i += 1;
+            k += 1;
+        }
+
+        else if(players[i].getScore() > players[j].getScore()){
+            aux[k] = players[j];
+            j += 1;
+            k += 1;
+        }
+
+        // scores iguais, compara timestamp
+        else{
+            if(players[i].getTimestamp() < players[j].getTimestamp()){
+                aux[k] = players[i];
+                i += 1;
+                k += 1;
+            }
+            else{
+                aux[k] = players[j];
+                j += 1;
+                k += 1;
+            }
+        }
+    }
+
+    while(i <= mid){
+        aux[k] = players[i];
+        k += 1;
+        i += 1;
+    }
+
+    while(j <= right){
+        aux[k] = players[j];
+        k += 1;
+        j += 1;
+    }
+
+    for(int p = left; p <= right; p++){
+        players[p] = aux[p];
+    }
+}
+
+void Matchmaking::merge_sort(int left, int right, Player* aux){
+    // calcula o meio
+    // ordena a parte esquerda
+    // ordena a parte direita
+    // junta as partes ordenadas
+
+    // caso base, quando as listas consideradas tem exatamente 1 elemento 
+    if(left >= right){
+        return;
+    }
+
+    int mid = (left + right)/2;
+    merge_sort(left, mid, aux);
+    merge_sort(mid + 1, right, aux);
+    merge(left, mid, right, aux);
+}
+
+void Matchmaking::sortByScoreMerge(){
+    // responsável apenas por chamar os auxiliares
+    Player* aux = new Player[MAX_PLAYERS];
+    merge_sort(0, size -1, aux);
+    delete[] aux;
+}
+
+
