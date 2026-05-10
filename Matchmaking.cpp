@@ -118,3 +118,46 @@ void Matchmaking::sortByScoreMerge(){
 }
 
 
+Player* Matchmaking::formGroup(int groupSize, int delta, int* n){
+    // ordena os jogadores com o sort (aqui ou fora?)
+    // parte do princípio que tá ordenado
+    // testa para todos os grupos de tamanho groupSize possíveis 
+    // pega o score do primeiro (menor) e compara com o do último (maior)
+    // se maior_score - menor_score <= delta:
+        // copia do jogador de maior_score até o jogador de menor_score
+        // remove da lista inicial players sobrescrevendo 
+    // se não der certo então o método deve indicar que não foi possível
+
+    // grupo que eu vou retornar
+    Player* group = new Player[groupSize];
+
+    int i = 0;
+
+    // testa todos os grupos de tamanho groupSize possíveis
+    while(i <= (size - groupSize)){
+        if((players[i + groupSize - 1].getScore()) - players[i].getScore() <= delta){
+            // copia os jogadores para o retorno
+            for(int j = 0; j < groupSize; j++){
+                group[j] = players[i + j];
+            }
+
+            // k < (size - groupSize) porque o novo players tem (size - groupSize) elementos
+            // como é sempre cópia de elementos da esquerda não perco informação nem mexo nos iniciais
+            for(int k = i; k < (size - groupSize); k++){
+                players[k] = players[k + groupSize];
+            }
+            size -= groupSize;
+            *n = groupSize;
+            return group;
+        }
+        i += 1;
+    }
+
+    // se chegou aqui é por que não deu certo, não retornou nada ainda    
+    delete[] group;
+    *n = 0;
+    std::cout << "Não foi possível realizar a formação de grupos" << std::endl;
+    return nullptr;
+}
+
+
