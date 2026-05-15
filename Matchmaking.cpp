@@ -13,7 +13,7 @@ Matchmaking::~Matchmaking(){
 
 
 bool Matchmaking::insert(Player player){
-    if(size != MAX_PLAYERS){
+    if(size <= MAX_PLAYERS){
         // optei por size ser o número de jogadores atuais por pura tradução
         // como o índice do último cara é size - 1, o novo cara tem que estar no size
         players[size] = player;
@@ -24,9 +24,27 @@ bool Matchmaking::insert(Player player){
     return false;
 }
 
-// bool RemovePlayer(int id)
-   // implementação
 
+bool Matchmaking::removePlayer(int id){
+
+    for (int p = 0; p < size; p++){
+        if (players[p].getId() == id){
+            // Movemos todos os elementos uma poisção à esquerda
+
+            for(int i = p; i < (size - 1); i++){ 
+                // (size - 1): para que nosso for não vá além dos limites do nosso array, 
+                // ao chegar na posição i = size -1
+                players[i] = players[i+1]; 
+            }
+
+            size -= 1;
+            return true;
+        }
+    }
+    // Se nenhum jogador com o referido id for encontrado
+    return false;
+}
+   
 
 // void sortByScoreInsertion()
    // implementação
@@ -139,17 +157,20 @@ Player* Matchmaking::formGroup(int groupSize, int delta, int* n){
             // copia os jogadores para o retorno
             for(int j = 0; j < groupSize; j++){
                 group[j] = players[i + j];
+                removePlayer(i + j);
             }
 
             // k < (size - groupSize) porque o novo players tem (size - groupSize) elementos
             // como é sempre cópia de elementos da esquerda não perco informação nem mexo nos iniciais
-            for(int k = i; k < (size - groupSize); k++){
-                players[k] = players[k + groupSize];
-            }
-            size -= groupSize;
+            // for(int k = i; k < (size - groupSize); k++){
+            //     players[k] = players[k + groupSize];
+            // }
+            // size -= groupSize;
+
             *n = groupSize;
             return group;
         }
+        
         i += 1;
     }
 
@@ -161,3 +182,23 @@ Player* Matchmaking::formGroup(int groupSize, int delta, int* n){
 }
 
 
+Player* Matchmaking::getWaitingPlayers(int* n){
+
+    // Se não existir jogadores na lista de espera
+    if (size == 0){
+        // Se o ponteiro passado para a função existir
+        if (n != nullptr) *n = 0;
+        return nullptr;
+    }
+    
+    // Caso contrário
+    Player* players_copy = new Player[size];
+    // Se o ponteiro passado para a função existir
+    if (n != nullptr) *n = size;
+
+    for (int p = 0; p < size; p++){
+        players_copy[p] = players[p];
+    }
+
+    return players_copy;
+}

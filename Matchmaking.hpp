@@ -25,11 +25,9 @@ public:
     bool removePlayer(int id);
 
     void sortByScoreInsertion();
-
     void sortByScoreMerge();
 
     Player* formGroup(int groupSize, int delta, int* n);
-
     Player* getWaitingPlayers(int* n);
 
     void printWaitingPlayers();
