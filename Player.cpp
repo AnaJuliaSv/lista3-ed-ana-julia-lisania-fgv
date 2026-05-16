@@ -20,3 +20,19 @@ Player::Player(int id, std::string name, int score, int timestamp){
 Player::~Player(){
     // não há memória alocada dinamicamente
 }
+
+int Player::getId(){
+    return this -> id;
+}
+
+std::string Player::getName(){
+    return this -> name;
+}
+
+int Player::getScore(){
+    return this -> score;
+}
+
+int Player::getTimestamp(){
+    return this -> timestamp;
+}

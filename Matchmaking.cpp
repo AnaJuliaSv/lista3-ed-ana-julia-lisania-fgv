@@ -1,4 +1,5 @@
 #include "Matchmaking.hpp"
+#include <iomanip>
 
 // construtor
 Matchmaking::Matchmaking(){
@@ -44,10 +45,45 @@ bool Matchmaking::removePlayer(int id){
     // Se nenhum jogador com o referido id for encontrado
     return false;
 }
+
+
+void Matchmaking::move_player(Player player, int id_from, int id_to){
+
+    // Movemos os elementos do fim do array até id_to para evitar acessos inválidos de memória
+    // fora do array
+    for (int i = id_from; i > id_to; i --){
+        players[i] = players[i - 1];
+    }
+
+    players[id_to] = player;
+}
    
 
-// void sortByScoreInsertion()
-   // implementação
+void Matchmaking::sortByScoreInsertion(){
+
+    // Começamos do segundo elemento, pois o primeiro está
+    // naturalmente ordenado
+    for (int e = 1; e < size; e++){
+        Player current_e = players[e];
+
+        // Ordenando o array em partes
+        for (int i = 0; i < e; i++){
+
+            if(players[i].getScore() > current_e.getScore()){
+                move_player(current_e, e, i);
+                break;
+
+            // Caso de empate no score
+            } else if (players[i].getScore() == current_e.getScore()){
+                if(players[i].getTimestamp() > current_e.getTimestamp()){
+                    move_player(current_e, e, i);
+                    break;
+                }
+            }
+        }
+    }
+}
+
 
 
 // funções auxiliares para merge
@@ -157,15 +193,15 @@ Player* Matchmaking::formGroup(int groupSize, int delta, int* n){
             // copia os jogadores para o retorno
             for(int j = 0; j < groupSize; j++){
                 group[j] = players[i + j];
-                removePlayer(i + j);
             }
 
             // k < (size - groupSize) porque o novo players tem (size - groupSize) elementos
-            // como é sempre cópia de elementos da esquerda não perco informação nem mexo nos iniciais
-            // for(int k = i; k < (size - groupSize); k++){
-            //     players[k] = players[k + groupSize];
-            // }
-            // size -= groupSize;
+            //como é sempre cópia de elementos da esquerda não perco informação nem mexo nos iniciais
+            for(int k = i; k < (size - groupSize); k++){
+                players[k] = players[k + groupSize];
+            }
+
+            size -= groupSize;
 
             *n = groupSize;
             return group;
@@ -177,7 +213,7 @@ Player* Matchmaking::formGroup(int groupSize, int delta, int* n){
     // se chegou aqui é por que não deu certo, não retornou nada ainda    
     delete[] group;
     *n = 0;
-    std::cout << "Não foi possível realizar a formação de grupos" << std::endl;
+    std::cout << "Nao foi possivel realizar a formacao de grupos.\n" << std::endl;
     return nullptr;
 }
 
@@ -201,4 +237,25 @@ Player* Matchmaking::getWaitingPlayers(int* n){
     }
 
     return players_copy;
+}
+
+
+void Matchmaking::printWaitingPlayers(){
+
+    std::cout << "Waiting Players:" << std::endl;
+
+    if(size == 0){
+        std::cout << "(empty)" << std::endl;
+
+    } else{ 
+        // Printamos todas as informações de forma organizada para cada player   
+        for (int p = 0; p < size; p++){
+            Player player = players[p];
+            std::cout << "[" << std::left << std::setw(2) << player.getId() << 
+                " | " << std::left << std::setw(12) << player.getName()<< " | " 
+                << std::left << std::setw(6) << player.getScore() << " | " 
+                << std::left << std::setw(2) << player.getTimestamp() << "]" << std::endl;
+        }
+    }
+
 }

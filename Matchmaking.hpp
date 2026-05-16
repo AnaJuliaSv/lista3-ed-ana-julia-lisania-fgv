@@ -3,7 +3,7 @@
 
 #include "Player.hpp"
 
-const int MAX_PLAYERS = 100000;
+const int MAX_PLAYERS = 10000;
 
 class Matchmaking {
 
@@ -11,10 +11,6 @@ private:
 
     Player players[MAX_PLAYERS];
     int size;
-
-    // funções auxiliares para merge
-    void merge(int left, int mid, int right, Player* aux);
-    void merge_sort(int left, int right, Player* aux);
 
 public:
 
@@ -32,7 +28,12 @@ public:
 
     void printWaitingPlayers();
 
-    // Outros métodos auxiliares, se necessário
+    // funções auxiliares para merge
+    void merge(int left, int mid, int right, Player* aux);
+    void merge_sort(int left, int right, Player* aux);
+
+    // funções auxiliares para o insertial
+    void move_player(Player player, int id_from, int id_to);
 };
 
 #endif
