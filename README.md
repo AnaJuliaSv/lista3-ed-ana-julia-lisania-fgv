@@ -56,6 +56,6 @@ Após compilar, execute o programa de acordo com o seu sistema operacional:
 
 # Estrutura de Dados do Sistema
 
-Internamente, o sistema mantém apenas um **array estático** fixo de tamanho `MAX_PLAYERS` para gerenciar a fila de espera. O array é do tipo Player, uma vez que é uma fila de jogadores. Como o tamanho do array é fixo, cada posição já contém um objeto instanciado com seus atributos próprios.
+Internamente, o sistema mantém apenas um **array estático** fixo de tamanho `MAX_PLAYERS` para gerenciar a fila de espera. O array é do tipo Player, uma vez que é uma fila de jogadores. Como o tamanho do array é fixo, todas as posições já contêm objetos instanciados na memória, mas o sistema utiliza apenas as posições ativas da fila naquele momento.
 
 Quando um novo jogador vai para a fila de espera, sua inserção é feita pelo método `insert(player)`. Utilizando o atributo `size` - que rastreia a quantidade atual de jogadores ativos na fila - o sistema o coloca diretamente no final da fila. Dessa forma, o array não está necessariamente ordenado a todo momento. Para remover um jogador a partir do método `removePlayer(id)`, o sistema percorre todo o array buscando o id do jogador especificado, e, após encontrá-lo, remove-o da fila e move todos os outros elementos à direita do jogador removido uma posição à esquerda, garantindo que não fiquem "buracos" na memória. Caso o id não seja encontrado, a fila não é alterada.
