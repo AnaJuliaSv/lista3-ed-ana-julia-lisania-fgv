@@ -61,7 +61,7 @@ void Matchmaking::sortByScoreInsertion(){
                 move_player(current_e, e, i);
                 break;
 
-            // Caso de empate no score
+            // Caso dê empate no score
             } else if (players[i].getScore() == current_e.getScore()){
                 if(players[i].getTimestamp() > current_e.getTimestamp()){
                     move_player(current_e, e, i);
@@ -166,6 +166,7 @@ Player* Matchmaking::formGroup(int groupSize, int delta, int* n){
 
             size -= groupSize;
             *n = groupSize;
+            printFormedGroup(group, n);
             return group;
         }
         i += 1;
@@ -213,5 +214,17 @@ void Matchmaking::printWaitingPlayers(){
                 << std::left << std::setw(6) << player.getScore() << " | " 
                 << std::left << std::setw(2) << player.getTimestamp() << "]" << std::endl;
         }
+    }
+}
+
+void Matchmaking::printFormedGroup(Player* group, int* n){
+    std::cout << "Group:" << std::endl;
+   
+    for (int p = 0; p < *n; p++){
+        Player player = group[p];
+        std::cout << "[" << std::left << std::setw(2) << player.getId() << 
+            " | " << std::left << std::setw(12) << player.getName()<< " | " 
+            << std::left << std::setw(6) << player.getScore() << " | " 
+            << std::left << std::setw(2) << player.getTimestamp() << "]" << std::endl;
     }
 }

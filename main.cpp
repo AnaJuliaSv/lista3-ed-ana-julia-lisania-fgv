@@ -11,18 +11,6 @@ void printSeparator(const string& title) {
     cout << "========================================\n" << endl;
 };
 
-void printGroup(Player* group, int* n){
-    std::cout << "Group:" << std::endl;
-   
-    for (int p = 0; p < *n; p++){
-        Player player = group[p];
-        std::cout << "[" << std::left << std::setw(2) << player.getId() << 
-            " | " << std::left << std::setw(12) << player.getName()<< " | " 
-            << std::left << std::setw(6) << player.getScore() << " | " 
-            << std::left << std::setw(2) << player.getTimestamp() << "]" << std::endl;
-    }
-}
-
 
 int main(void){
     Matchmaking* matchmaking = new Matchmaking();   
@@ -92,22 +80,14 @@ int main(void){
     printSeparator("Formacao de Grupo (bem sucedida)");
     int n_1 = 0;
     Player* group_1 = matchmaking->formGroup(3, 50, &n_1);
-
-    if(group_1 != nullptr){
-        printGroup(group_1, &n_1);
-        delete[] group_1;
-    }
+    delete[] group_1;
 
 
     // 6. Formação de grupo sem sucesso
     printSeparator("Formacao de Grupo (sem sucesso)");
     int n_2 = 0;
     Player* group_2 = matchmaking->formGroup(3, 30, &n_2);
-
-    if(group_2 != nullptr){
-        printGroup(group_2, &n_2);
-        delete[] group_2;
-    }
+    delete[] group_2;
 
 
     // 7. Recuperação dos dados

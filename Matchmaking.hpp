@@ -28,6 +28,9 @@ public:
 
     void printWaitingPlayers();
 
+    // Função auxiliar para printGroup
+    void printFormedGroup(Player* group, int* n);
+
     // Funções auxiliares para o insertion
     void move_player(Player player, int id_from, int id_to);
 
