@@ -1,6 +1,6 @@
 #include "Player.hpp"
 
-// construtor padrão
+// Construtor padrão
 Player::Player() {
     this->id = 0;
     this->name = "";
@@ -8,7 +8,7 @@ Player::Player() {
     this->timestamp = 0;
 }
 
-// construtor com argumentos específicos
+// Construtor com argumentos específicos
 Player::Player(int id, std::string name, int score, int timestamp){
     this->id = id;
     this->name = name;
@@ -16,7 +16,7 @@ Player::Player(int id, std::string name, int score, int timestamp){
     this->timestamp = timestamp;
 }
 
-// destrutor
+// Destrutor
 Player::~Player(){
     // não há memória alocada dinamicamente
 }

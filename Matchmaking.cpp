@@ -1,54 +1,43 @@
 #include "Matchmaking.hpp"
 #include <iomanip>
 
-// construtor
+// Construtor
 Matchmaking::Matchmaking(){
-    // players já é inicializado pelo instanciamento de Matchmaking()
-    this->size = 0; // size equivale ao número atual de jogadores? Ou é o índice?
+    this->size = 0;
 }
 
-// destrutor
+// Destrutor
 Matchmaking::~Matchmaking(){
-    // não há memória alocada dinamicamente
+    // Não há memória alocada dinamicamente
 }
 
 
 bool Matchmaking::insert(Player player){
     if(size <= MAX_PLAYERS){
-        // optei por size ser o número de jogadores atuais por pura tradução
-        // como o índice do último cara é size - 1, o novo cara tem que estar no size
         players[size] = player;
         size += 1;
         return true;
     }
-    
     return false;
 }
 
 
 bool Matchmaking::removePlayer(int id){
-
     for (int p = 0; p < size; p++){
         if (players[p].getId() == id){
             // Movemos todos os elementos uma poisção à esquerda
-
             for(int i = p; i < (size - 1); i++){ 
-                // (size - 1): para que nosso for não vá além dos limites do nosso array, 
-                // ao chegar na posição i = size -1
                 players[i] = players[i+1]; 
             }
-
             size -= 1;
             return true;
         }
     }
-    // Se nenhum jogador com o referido id for encontrado
     return false;
 }
 
 
 void Matchmaking::move_player(Player player, int id_from, int id_to){
-
     // Movemos os elementos do fim do array até id_to para evitar acessos inválidos de memória
     // fora do array
     for (int i = id_from; i > id_to; i --){
@@ -60,7 +49,6 @@ void Matchmaking::move_player(Player player, int id_from, int id_to){
    
 
 void Matchmaking::sortByScoreInsertion(){
-
     // Começamos do segundo elemento, pois o primeiro está
     // naturalmente ordenado
     for (int e = 1; e < size; e++){
@@ -85,24 +73,15 @@ void Matchmaking::sortByScoreInsertion(){
 }
 
 
-
-// funções auxiliares para merge
-
 void Matchmaking::merge(int left, int mid, int right, Player* aux){
-    // recebe duas metades já ordenadas
-    // devemos ir comparando do início de cada array
+    // Recebe duas metades já ordenadas e une em um array ordenado
 
-    int i = left; // índice para percorrer a metade esquerda
-    int j = mid + 1; // índice para percorrer a metade direita
-
-    // a cada passo comparo players[i] com players[j] e copia o menor para o auxiliar 
-    // aí avança o cursor de quem foi copiado
-
-    int k = left; // índice do array auxiliar de players
+    int i = left; // Cursor da metade esquerda
+    int j = mid + 1; // Cursor da metade direita
+    int k = left; // Cursor do array auxiliar
     
     while((i <= mid) && (j <= right)){
-
-        // scores diferentes
+        // Scores diferentes
         if(players[i].getScore() < players[j].getScore()){
             aux[k] = players[i];
             i += 1;
@@ -115,7 +94,7 @@ void Matchmaking::merge(int left, int mid, int right, Player* aux){
             k += 1;
         }
 
-        // scores iguais, compara timestamp
+        // Empate no score, desempata pelo timestamp
         else{
             if(players[i].getTimestamp() < players[j].getTimestamp()){
                 aux[k] = players[i];
@@ -148,16 +127,12 @@ void Matchmaking::merge(int left, int mid, int right, Player* aux){
 }
 
 void Matchmaking::merge_sort(int left, int right, Player* aux){
-    // calcula o meio
-    // ordena a parte esquerda
-    // ordena a parte direita
-    // junta as partes ordenadas
-
-    // caso base, quando as listas consideradas tem exatamente 1 elemento 
+    // Caso base, listas de 1 elemento 
     if(left >= right){
         return;
     }
 
+    // Chama o algoritmo de ordenação recursivamente
     int mid = (left + right)/2;
     merge_sort(left, mid, aux);
     merge_sort(mid + 1, right, aux);
@@ -165,7 +140,6 @@ void Matchmaking::merge_sort(int left, int right, Player* aux){
 }
 
 void Matchmaking::sortByScoreMerge(){
-    // responsável apenas por chamar os auxiliares
     Player* aux = new Player[MAX_PLAYERS];
     merge_sort(0, size -1, aux);
     delete[] aux;
@@ -173,44 +147,29 @@ void Matchmaking::sortByScoreMerge(){
 
 
 Player* Matchmaking::formGroup(int groupSize, int delta, int* n){
-    // ordena os jogadores com o sort (aqui ou fora?)
-    // parte do princípio que tá ordenado
-    // testa para todos os grupos de tamanho groupSize possíveis 
-    // pega o score do primeiro (menor) e compara com o do último (maior)
-    // se maior_score - menor_score <= delta:
-        // copia do jogador de maior_score até o jogador de menor_score
-        // remove da lista inicial players sobrescrevendo 
-    // se não der certo então o método deve indicar que não foi possível
-
-    // grupo que eu vou retornar
     Player* group = new Player[groupSize];
 
     int i = 0;
 
-    // testa todos os grupos de tamanho groupSize possíveis
+    // Testa todos os grupos de tamanho groupSize possíveis
     while(i <= (size - groupSize)){
         if((players[i + groupSize - 1].getScore()) - players[i].getScore() <= delta){
-            // copia os jogadores para o retorno
+            // Copia o grupo que obedece às restrições
             for(int j = 0; j < groupSize; j++){
                 group[j] = players[i + j];
             }
 
-            // k < (size - groupSize) porque o novo players tem (size - groupSize) elementos
-            //como é sempre cópia de elementos da esquerda não perco informação nem mexo nos iniciais
+            // Remove os jogadores do grupo deslocando o restante à esquerda
             for(int k = i; k < (size - groupSize); k++){
                 players[k] = players[k + groupSize];
             }
 
             size -= groupSize;
-
             *n = groupSize;
             return group;
         }
-        
         i += 1;
     }
-
-    // se chegou aqui é por que não deu certo, não retornou nada ainda    
     delete[] group;
     *n = 0;
     std::cout << "Nao foi possivel realizar a formacao de grupos.\n" << std::endl;
@@ -219,7 +178,6 @@ Player* Matchmaking::formGroup(int groupSize, int delta, int* n){
 
 
 Player* Matchmaking::getWaitingPlayers(int* n){
-
     // Se não existir jogadores na lista de espera
     if (size == 0){
         // Se o ponteiro passado para a função existir
@@ -241,7 +199,6 @@ Player* Matchmaking::getWaitingPlayers(int* n){
 
 
 void Matchmaking::printWaitingPlayers(){
-
     std::cout << "Waiting Players:" << std::endl;
 
     if(size == 0){
@@ -257,5 +214,4 @@ void Matchmaking::printWaitingPlayers(){
                 << std::left << std::setw(2) << player.getTimestamp() << "]" << std::endl;
         }
     }
-
 }
