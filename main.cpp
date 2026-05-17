@@ -25,8 +25,7 @@ void printGroup(Player* group, int* n){
 
 
 int main(void){
-
-    Matchmaking matchmaking;   
+    Matchmaking* matchmaking = new Matchmaking();   
     
     // Criação de jogadores
     Player player_1 = Player(1, "Ana Julia", 1400, 1);
@@ -43,76 +42,78 @@ int main(void){
     // 1. Inserção dos Jogadores
     printSeparator("Insercao de Jogadores");
 
-    matchmaking.insert(player_1);
-    matchmaking.insert(player_2);
-    matchmaking.insert(player_3);
-    matchmaking.insert(player_4);
-    matchmaking.insert(player_5);
-    matchmaking.insert(player_6);
-    matchmaking.insert(player_7);
-    matchmaking.insert(player_8);
-    matchmaking.insert(player_9);
-    matchmaking.insert(player_10);
+    matchmaking->insert(player_1);
+    matchmaking->insert(player_2);
+    matchmaking->insert(player_3);
+    matchmaking->insert(player_4);
+    matchmaking->insert(player_5);
+    matchmaking->insert(player_6);
+    matchmaking->insert(player_7);
+    matchmaking->insert(player_8);
+    matchmaking->insert(player_9);
+    matchmaking->insert(player_10);
 
-    matchmaking.printWaitingPlayers();
+    matchmaking->printWaitingPlayers();
 
 
     // 2. Remoção de Jogadores
     printSeparator("Remocao de Jogadores");
 
-    matchmaking.removePlayer(7);
-    matchmaking.removePlayer(3);
-    matchmaking.removePlayer(8);
-
-    matchmaking.printWaitingPlayers();
+    matchmaking->removePlayer(7);
+    matchmaking->removePlayer(3);
+    matchmaking->removePlayer(8);
+ 
+    matchmaking->printWaitingPlayers();
 
 
     // 3. Ordenação com Insertion Sort
     printSeparator("Ordenacao com Insertion Sort");
 
-    matchmaking.sortByScoreInsertion();
-    matchmaking.printWaitingPlayers();
-
+    matchmaking->sortByScoreInsertion();
+    matchmaking->printWaitingPlayers();
+ 
     Player player_11 = Player(11, "Cleo", 1100, 12);
-    matchmaking.insert(player_11);
+    matchmaking->insert(player_11);
 
 
     // 4. Ordenação com Merge Sort
     printSeparator("Ordenacao com Merge Sort");
 
     cout << "Antes da Ordenacao:\n" << endl;
-    matchmaking.printWaitingPlayers();
+    matchmaking->printWaitingPlayers();
 
     // Ordenação com empate de Score
     cout << "\nDepois da ordenacao:\n" << endl;
-    matchmaking.sortByScoreMerge();
-    matchmaking.printWaitingPlayers();
+    matchmaking->sortByScoreMerge();
+    matchmaking->printWaitingPlayers();
 
 
     // 5. Formação bem-sucedida de grupo
     printSeparator("Formacao de Grupo (bem sucedida)");
     int n_1 = 0;
-    Player* group_1 = matchmaking.formGroup(3, 50, &n_1);
+    Player* group_1 = matchmaking->formGroup(3, 50, &n_1);
 
     if(group_1 != nullptr){
         printGroup(group_1, &n_1);
+        delete[] group_1;
     }
 
 
     // 6. Formação de grupo sem sucesso
     printSeparator("Formacao de Grupo (sem sucesso)");
     int n_2 = 0;
-    Player* group_2 = matchmaking.formGroup(3, 30, &n_2);
+    Player* group_2 = matchmaking->formGroup(3, 30, &n_2);
 
     if(group_2 != nullptr){
         printGroup(group_2, &n_2);
+        delete[] group_2;
     }
 
 
     // 7. Recuperação dos dados
     printSeparator("Recuperacao dos dados");
     int n = 0;
-    Player* actual_players = matchmaking.getWaitingPlayers(&n);
+    Player* actual_players = matchmaking->getWaitingPlayers(&n);
 
     cout << "Atualmente temos " << n << " jogadores.\n" << endl;
     delete[] actual_players;
@@ -121,9 +122,9 @@ int main(void){
     // 8. Exibição do estado do sistema
     printSeparator("Exibicao do Estado do Sistema");
 
-    matchmaking.printWaitingPlayers();
+    matchmaking->printWaitingPlayers();
     cout << "\n" << endl;
 
-
+    delete matchmaking;
     return 0;
 }
