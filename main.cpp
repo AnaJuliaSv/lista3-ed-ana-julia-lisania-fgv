@@ -115,6 +115,7 @@ int main(void){
     Player* actual_players = matchmaking.getWaitingPlayers(&n);
 
     cout << "Atualmente temos " << n << " jogadores.\n" << endl;
+    delete[] actual_players;
 
 
     // 8. Exibição do estado do sistema
